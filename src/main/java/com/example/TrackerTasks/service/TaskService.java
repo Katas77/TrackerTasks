@@ -6,6 +6,7 @@ import com.example.TrackerTasks.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -24,14 +25,14 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final UserService userService;
 
-
+    @Transactional
     public Flux<Task> findAll() {
         return taskRepository.findAll()
                 .flatMap(this::zipLocAuthor)
                 .flatMap(this::zipLocAssignee)
                 .flatMap(this::zipLocSet);
     }
-
+    @Transactional
     public Mono<Task> findById(String id) {
         return taskRepository.findById(id)
                 .flatMap(this::zipLocAuthor)
